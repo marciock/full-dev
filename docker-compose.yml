@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+
+  db:
+    image: mysql
+    container_name: mysql-container
+    volumes:
+      - ./api/database/data:/var/lib/mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_USER: root
+      MYSQL_DB: developer
+      MYSQL_ROOT_PASSWORD: password
+     
+      MYSQL_DATABASE: developer
+    restart: always
+
+  
+  api:
+    build: "./api"
+    container_name: node-container
+    restart: always
+    volumes:
+      - ./api:/usr/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+   
+    
+  frontend:
+    build: "./frontend"
+    container_name: frontend
+    restart: always
+    volumes:
+      - ./frontend:/usr/app
+    ports:
+      - "3006:3006"
+    links:
+      - api
+    
+   
+  
+
+   
